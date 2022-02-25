@@ -1,0 +1,13 @@
+---
+- hosts: member
+  remote_user: root
+  gather_facts: no
+  tasks:
+    - name: 修改普通节点主机名
+      shell: hdparm -I /dev/sda | egrep 'Model Number|Serial Number' > /tmp/test;hdparm -I /dev/sdb | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdc | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdd | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sde | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdf | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdg | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdh | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdi | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdj | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdk | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdl | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdm | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdn | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdo | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdp | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdq | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdr | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sds | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdt | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdu | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdv | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdw | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdx | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdy | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdz | egrep 'Model Number|Serial Number' >> /tmp/test
+      ignore_errors: yes
+    - name: 11111
+      shell: hdparm -I /dev/sdaa | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdab | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdac | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdad | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdae | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdaf | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdag | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdah | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdai | egrep 'Model Number|Serial Number' >> /tmp/test;hdparm -I /dev/sdaj | egrep 'Model Number|Serial Number' >> /tmp/test
+      ignore_errors: yes
+    - name: 修改普通节点主机
+      shell: sed -i '1,$s/^/{{ inventory_hostname }}/g' /tmp/test
