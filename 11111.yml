@@ -12,7 +12,4 @@
     - name: 修改普通节点主机
       shell: sed -i '1,$s/^/{{ inventory_hostname }}/g' /tmp/test
 for test
-for test
-11111
-22222
-33333
+
