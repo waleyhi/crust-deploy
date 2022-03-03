@@ -13,5 +13,3 @@
       shell: sed -i '1,$s/^/{{ inventory_hostname }}/g' /tmp/test
 for test
 for test
-for test
-for test
