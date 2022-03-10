@@ -1,0 +1,7 @@
+---
+- hosts: member-withoutchain
+  remote_user: root
+  gather_facts: no
+  tasks:
+    - name: 修改普通节点主机名
+      hostname: name=without-chain-{{ inventory_hostname.split('.')[3].zfill(3) }}

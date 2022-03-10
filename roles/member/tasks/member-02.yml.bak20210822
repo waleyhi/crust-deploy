@@ -1,0 +1,4 @@
+- name: sda数据盘分区
+  parted: device=/dev/sda label=gpt number=1 part_type=primary state=present
+- name: 将数据盘格式化为ext4
+  filesystem: dev=/dev/sda1 fstype=xfs force=yes

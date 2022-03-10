@@ -1,0 +1,10 @@
+#member服务器免密登陆
+- import_tasks: member-01.yml
+#member服务器数据盘格式化
+- import_tasks: member-02.yml
+#member服务器开机自启动配置
+- import_tasks: member-03.yml
+#member服务器监控部署
+- import_tasks: member-04.yml
+#member服务器安装crust
+- import_tasks: member-05.yml

@@ -1,0 +1,12 @@
+- name: 分发crust安装包
+  copy: src=v1.0.0.tar.gz dest=/root/ mode=777
+- name: 解压下载好的安装包
+  unarchive: copy=no src=/root/v1.0.0.tar.gz dest=/root/ owner=root group=root mode=777
+- name: 安装crust服务
+  shell: cd crust-node-1.0.0 && ./install.sh --registry cn
+- name: 分发sgx开启工具安装包
+  copy: src=sgx_enable dest=/root/ mode=777
+- name: 开启sgx
+  shell: /root/sgx_enable
+#- name: 重启服务器
+#  shell: reboot

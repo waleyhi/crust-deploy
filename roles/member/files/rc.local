@@ -1,0 +1,2 @@
+#!/bin/sh -e
+mount /dev/sda1 /opt/crust/data/files/

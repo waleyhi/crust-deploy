@@ -1,0 +1,2 @@
+- name: 打通跳板机root用户到节点免密登陆
+  authorized_key: user=root key='{{lookup('file','/root/.ssh/id_rsa.pub')}}'

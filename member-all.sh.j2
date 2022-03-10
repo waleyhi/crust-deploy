@@ -1,0 +1,68 @@
+#!/bin/bash
+收集crust-member节点chain运行状态信息并推送到prometheus,0表示正在运行，1表示异常
+member_chain_status=`crust status| grep chain | grep running > /dev/null && echo 0 || echo 1`
+echo "pushgateway_member_chain_status $member_chain_status" | curl --data-binary @- http://10.122.31.74:9091/metrics/job/member/unit/chain/instance/{{ inventory_hostname }}
+
+#收集crust-member节点api运行状态信息并推送到prometheus,0表示正在运行，1表示异常
+member_api_status=`crust status| grep api | grep running > /dev/null && echo 0 || echo 1`
+echo "pushgateway_member_api_status $member_api_status" | curl --data-binary @- http://10.122.31.74:9091/metrics/job/member/unit/api/instance/{{ inventory_hostname }}
+
+#收集crust-member节点sworker运行状态信息并推送到prometheus,0表示正在运行，1表示异常
+member_sworker_status=`crust status| grep sworker | grep running > /dev/null && echo 0 || echo 1`
+echo "pushgateway_member_sworker_status $member_sworker_status" | curl --data-binary @- http://10.122.31.74:9091/metrics/job/member/unit/sworker/instance/{{ inventory_hostname }}
+
+#收集crust-member节点smanager运行状态信息并推送到prometheus,0表示正在运行，1表示异常
+member_smanager_status=`crust status| grep smanager | grep running > /dev/null && echo 0 || echo 1`
+echo "pushgateway_member_smanager_status $member_smanager_status" | curl --data-binary @- http://10.122.31.74:9091/metrics/job/member/unit/smanager/instance/{{ inventory_hostname }}
+
+#收集crust-member节点ipfs运行状态信息并推送到prometheus,0表示正在运行，1表示异常
+member_ipfs_status=`crust status| grep ipfs | grep running > /dev/null && echo 0 || echo 1`
+echo "pushgateway_member_ipfs_status $member_ipfs_status" | curl --data-binary @- http://10.122.31.74:9091/metrics/job/member/unit/ipfs/instance/{{ inventory_hostname }}
+
+#检查数据盘是否挂载,0表示已挂载，1表示挂载异常
+member_mount_status=`df -h| grep /opt/crust/data/files > /dev/null && echo 0 || echo 1`
+echo "pushgateway_member_mount_status $member_mount_status" | curl --data-binary @- http://10.122.31.74:9091/metrics/job/member/unit/ipfs/instance/{{ inventory_hostname }}
+
+#收集本节点当前算力
+member_srd_complete=`crust tools workload | grep srd_complete | awk '{print $3}' | awk -F ',' '{print $1}'`
+echo "pushgateway_member_srd_complete $member_srd_complete" | curl --data-binary @- http://10.122.31.74:9091/metrics/job/member/unit/srd_complete/instance/{{ inventory_hostname }}
+#检查本节点剩余任务量
+member_srd_remaining_task=`crust tools workload | grep srd_remaining_task | awk '{print $3}' | awk -F ',' '{print $1}'`
+echo "pushgateway_member_srd_remaining_task $member_srd_remaining_task" | curl --data-binary @- http://10.122.31.74:9091/metrics/job/member/unit/remaining_task/instance/{{ inventory_hostname }}
+
+#收集sworker最近2000行日志
+docker logs --tail 2000 `docker ps| grep crust-sworker| awk '{print $1}'` > /tmp/sworker.log 2>&1
+#收集sworker日志最新时间戳
+log_latest_time=`tail -1 /tmp/sworker.log |awk -F '[' '{print $2}'| awk -F ']' '{print $1}'`
+log_send_report_time=`cat /tmp/sworker.log | grep -i 'Send work report' | tail -1 |awk -F '[' '{print $2}'| awk -F ']' '{print $1}'`
+#检查sworker日志是否报错，报错返回1，正常返回0
+log_error=`cat /tmp/sworker.log | grep -i error > /dev/null && echo 1 || echo 0`
+echo "pushgateway_member_sworker_log_error $log_error" | curl --data-binary @- http://10.122.31.74:9091/metrics/job/member/unit/sworker/instance/{{ inventory_hostname }}
+
+log_latest_timestamp=$(date -d "$log_latest_time" +%s)
+log_send_report_timestamp=$(date -d "$log_send_report_time" +%s)
+timestamp_now=`date "+%s"`
+
+time_sworker_log_latest_delay=`echo $(($timestamp_now-$log_latest_timestamp))`
+time_sworker_log_send_report_delay=`echo $(($timestamp_now-$log_send_report_timestamp))`
+
+#sworker日志3分钟没更新返回1，告警
+if [ $time_sworker_log_latest_delay -gt 180 ];then
+	echo "time_sworker_log_latest_delay 1" | curl --data-binary @- http://10.122.31.74:9091/metrics/job/member/unit/sworker/instance/{{ inventory_hostname }}
+else
+	echo "time_sworker_log_latest_delay 0" | curl --data-binary @- http://10.122.31.74:9091/metrics/job/member/unit/sworker/instance/{{ inventory_hostname }}
+fi
+
+#send report 50分钟没更新返回1，告警
+if [ $time_sworker_log_send_report_delay -gt 3000 ];then
+	echo "time_sworker_log_send_report_delay 1" | curl --data-binary @- http://10.122.31.74:9091/metrics/job/member/unit/sworker/instance/{{ inventory_hostname }}
+else
+        echo "time_sworker_log_send_report_delay 0" | curl --data-binary @- http://10.122.31.74:9091/metrics/job/member/unit/sworker/instance/{{ inventory_hostname }}
+fi
+
+
+
+
+
+
+

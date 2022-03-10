@@ -1,0 +1,10 @@
+- name: 将rc-local服务配置文件下发到服务器上
+  copy: src=rc-local.service dest=/lib/systemd/system/ backup=yes
+- name: 将rc-local托管到system下
+  shell: ln -s /lib/systemd/system/rc.local.service /etc/systemd/system/
+  ignore_errors: yes
+- name: 将rc.local配置文件下发到服务器上
+  copy: src=rc.local dest=/etc/ mode=777 backup=yes
+- name: rc-local服务器开机自启动
+  service: name=rc-local.service state=started enabled=yes
+  ignore_errors: yes

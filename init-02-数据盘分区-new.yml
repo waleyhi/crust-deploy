@@ -1,0 +1,19 @@
+---
+- hosts: member
+  remote_user: root
+  gather_facts: yes
+  tasks:
+     - name: 对未分区磁盘进行分区
+       parted: device=/dev/{{item.key}} label=gpt number=1 part_type=primary state=present
+       when: (not item.value.partitions) and (item.value.model != None) and (item.key!='sr0')
+       register: status
+       with_dict: "{{ ansible_devices }}"
+       ignore_errors: yes
+       # - name: 通知系统内核新增磁盘分区信息
+       #       shell: partprobe
+       # - name: 将数据盘格式化为xfs
+       #filesystem: dev=/dev/{{item.key}} fstype=xfs force=yes
+       #when: (not item.value.partitions) and (item.value.model != None) and (item.key!='sr0') and (item.vendor = 'ATA')
+       #with_dict: "{{ ansible_devices }}"
+     - name: 格式化分区
+       shell: mkfs.xfs -f /dev/sda1;mkfs.xfs -f /dev/sdb1;mkfs.xfs -f /dev/sdc1;mkfs.xfs -f /dev/sdd1;mkfs.xfs -f /dev/sde1;mkfs.xfs -f /dev/sdf1;mkfs.xfs -f /dev/sdg1;mkfs.xfs -f /dev/sdh1;mkfs.xfs -f /dev/sdi1;mkfs.xfs -f /dev/sdj1;mkfs.xfs -f /dev/sdk1;mkfs.xfs -f /dev/sdl1;mkfs.xfs -f /dev/sdm1;mkfs.xfs -f /dev/sdn1;mkfs.xfs -f /dev/sdo1;mkfs.xfs -f /dev/sdp1;mkfs.xfs -f /dev/sdq1;mkfs.xfs -f /dev/sdr1;mkfs.xfs -f /dev/sds1;mkfs.xfs -f /dev/sdt1;mkfs.xfs -f /dev/sdu1;mkfs.xfs -f /dev/sdv1;mkfs.xfs -f /dev/sdw1;mkfs.xfs -f /dev/sdx1;mkfs.xfs -f /dev/sdy1;mkfs.xfs -f /dev/sdz1;mkfs.xfs -f /dev/sdaa1;mkfs.xfs -f /dev/sdab1;mkfs.xfs -f /dev/sdac1;mkfs.xfs -f /dev/sdad1;mkfs.xfs -f /dev/sdae1;mkfs.xfs -f /dev/sdaf1;mkfs.xfs -f /dev/sdag1;mkfs.xfs -f /dev/sdah1;
