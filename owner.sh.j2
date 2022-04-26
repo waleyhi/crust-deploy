@@ -10,3 +10,6 @@ echo "pushgateway_owner_best_height $owner_best_height" | curl --data-binary @- 
 #获取当前owner节点本地最新高度
 owner_finalized_height=`cat /tmp/crust.tmp.log | grep finalized| grep best | tail -1  | awk -F ',' '{print $3}' |awk '{print $2}'| awk -F '#' '{print $2}'`
 echo "pushgateway_owner_finalized_height $owner_finalized_height" | curl --data-binary @- http://10.122.31.74:9091/metrics/job/owner/part/chain/instance/{{ inventory_hostname }}
+
+
+test
