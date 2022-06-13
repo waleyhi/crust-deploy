@@ -1,4 +1,4 @@
-name: Rust
+name: 单元测试01
 
 on:
   push:
@@ -10,7 +10,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  cargo test:
 
     runs-on: ubuntu-latest
 
