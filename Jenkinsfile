@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('install lotus') {
       steps {
-        input 'test'
+        echo 'hello'
       }
     }
 
